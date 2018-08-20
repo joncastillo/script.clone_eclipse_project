@@ -44,7 +44,7 @@ if [ -d "adc-ausnz-engage_MERC-${DESTINATION}" ]; then
     fi
 
     if [ -f "/usr/bin/rsync" ]; then
-        rsync --info=progress2 -ahr adc-ausnz-engage_MERC-${DESTINATION} adc-ausnz-engage_MERC-${DESTINATION}.bak
+        rsync --info=progress2 -ahr adc-ausnz-engage_MERC-${DESTINATION}/ adc-ausnz-engage_MERC-${DESTINATION}.bak
     else
         rm -rf adc-ausnz-engage_MERC-${DESTINATION}.bak
         cp -r adc-ausnz-engage_MERC-${DESTINATION} adc-ausnz-engage_MERC-${DESTINATION}.bak
@@ -54,7 +54,7 @@ fi
 echo "Copying git source to adc-ausnz-engage_MERC-${DESTINATION}..."
 
 if [ -f "/usr/bin/rsync" ]; then
-    rsync --info=progress2 -ahr ${SOURCE_PROJECT} adc-ausnz-engage_MERC-$DESTINATION
+    rsync --info=progress2 -ahr ${SOURCE_PROJECT}/ adc-ausnz-engage_MERC-$DESTINATION
 else
     cp -r ${SOURCE_PROJECT} adc-ausnz-engage_MERC-$DESTINATION
 fi
@@ -67,8 +67,7 @@ if [ -d "MERC-${DESTINATION}" ]; then
 fi
 
 if [ -f "/usr/bin/rsync" ]; then
-    rsync --info=progress2 -ahr ENGAGE_MAIN/Engage MERC-${DESTINATION}
-    rsync --info=progress2 -ahr ENGAGE_MAIN/.metadata MERC-${DESTINATION}
+    rsync --info=progress2 -ahr ENGAGE_MAIN/ MERC-${DESTINATION}
 else
     cp -r ENGAGE_MAIN/Engage MERC-${DESTINATION}
     cp -r ENGAGE_MAIN/.metadata MERC-${DESTINATION}
