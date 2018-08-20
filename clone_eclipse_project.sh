@@ -38,12 +38,17 @@ git pull
 cd ..
 
 if [ -d "adc-ausnz-engage_MERC-${DESTINATION}" ]; then
-    echo "Destination folder exists! moving to adc-ausnz-engage_MERC-${DESTINATION}.bak..."
+    echo "Destination folder exists! copying to adc-ausnz-engage_MERC-${DESTINATION}.bak..."
     if [ -d "adc-ausnz-engage_MERC-${DESTINATION}.bak" ]; then
         echo "Backup folder exists! deleting adc-ausnz-engage_MERC-${DESTINATION}.bak..."
         rm -rf adc-ausnz-engage_MERC-${DESTINATION}.bak
     fi
-    mv adc-ausnz-engage_MERC-${DESTINATION} adc-ausnz-engage_MERC-${DESTINATION}.bak
+
+    if [ -f "/usr/bin/rsync" ]; then
+        rsync --info=progress2 -ahr adc-ausnz-engage_MERC-${DESTINATION} adc-ausnz-engage_MERC-${DESTINATION}.bak
+    else
+        cp -r ${SOURCE_PROJECT} adc-ausnz-engage_MERC-$DESTINATION
+    fi    
 fi
         
 echo "Copying git source to adc-ausnz-engage_MERC-${DESTINATION}..."
@@ -56,7 +61,7 @@ fi
 
 cd C:\/VFI\/ide\/EclipseWorkspaces\/
 
-echo "Copying IDE source to ${PWD}\/${DESTINATION}..."
+echo "Copying IDE source to ${PWD}/MERC-${DESTINATION}..."
 if [ -d "MERC-${DESTINATION}" ]; then
     rm -rf MERC-${DESTINATION}
 fi
@@ -67,19 +72,21 @@ else
     cp -r ENGAGE_MAIN MERC-${DESTINATION}
 fi
 
-cd MERC-${DESTINATION}\/Engage
+cd MERC-${DESTINATION}/Engage
 
 echo "Changing old config ${SOURCE_PROJECT} to use adc-ausnz-engage_MERC-${DESTINATION}..."
-#export SUBSTITUTE_FROM=`echo ${SOURCE_PROJECT}`
-#export SUBSTITUTE_TO=`echo adc-ausnz-engage_MERC-${DESTINATION}`
-#export SUBSTITUTE_EXPRESSION=`echo "s:${SUBSTITUTE_FROM}:${SUBSTITUTE_TO}:g"`
-
-sed -i -r $SUBSTITUTE_EXPRESSION .project
+export SUBSTITUTE_FROM=`echo ${SOURCE_PROJECT}`
+export SUBSTITUTE_TO=`echo adc-ausnz-engage_MERC-${DESTINATION}`
+export SUBSTITUTE_EXPRESSION=`echo "s:${SUBSTITUTE_FROM}:${SUBSTITUTE_TO}:g"`
+echo ${SUBSTITUTE_EXPRESSION}
+sed -i -r ${SUBSTITUTE_EXPRESSION} .project
 
 echo "Resetting UI..."
 if [ -d "./.metadata/.plugins/org.eclipse.core.runtime" ]; then
     echo "UI reset!"
-    rm -rf ./.metadata/.plugins/org.eclipse.core.runtime
+    rm -rf ./.metadata/.plugins/org.eclipse.core.runtime/.settings/com.genuitec.eclipse.theming.ui.prefs
+    rm -rf ./.metadata/.plugins/org.eclipse.core.runtime/.settings/com.github.eclipsecolortheme.prefs
+
 fi
 
 echo "Done! Don't forget to switch to MERC-${DESTINATION} branch."
