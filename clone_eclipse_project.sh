@@ -85,7 +85,7 @@ sed -i -r ${SUBSTITUTE_EXPRESSION} .project
 echo "Resetting UI..."
 if [ -d "./.metadata/.plugins/org.eclipse.core.runtime" ]; then
     echo "UI reset!"
-    rm -rf ./.metadata/.plugins/org.eclipse.core.runtime/.settings/com.genuitec.eclipse.theming.ui.prefs
+    rm -rf ./.metadata/.plugins/org.eclipse.core.runtime
 fi
 
 echo "Done! Don't forget to switch to MERC-${DESTINATION} branch."
