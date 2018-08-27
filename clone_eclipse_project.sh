@@ -46,7 +46,9 @@ if [ -d "adc-ausnz-engage_MERC-${DESTINATION}" ]; then
     if [ -f "/usr/bin/rsync" ]; then
         rsync --info=progress2 -ahr adc-ausnz-engage_MERC-${DESTINATION}/ adc-ausnz-engage_MERC-${DESTINATION}.bak
     else
-        rm -rf adc-ausnz-engage_MERC-${DESTINATION}.bak
+        if [ -d "adc-ausnz-engage_MERC-${DESTINATION}.bak" ]; then
+            rm -rf adc-ausnz-engage_MERC-${DESTINATION}.bak
+        fi
         cp -r adc-ausnz-engage_MERC-${DESTINATION} adc-ausnz-engage_MERC-${DESTINATION}.bak
     fi    
 fi
@@ -69,8 +71,8 @@ fi
 if [ -f "/usr/bin/rsync" ]; then
     rsync --info=progress2 -ahr ENGAGE_MAIN/ MERC-${DESTINATION}
 else
-    cp -r ENGAGE_MAIN/Engage MERC-${DESTINATION}
-    cp -r ENGAGE_MAIN/.metadata MERC-${DESTINATION}
+    cp -r ENGAGE_MAIN MERC-${DESTINATION}
+    cp -r ENGAGE_MAIN MERC-${DESTINATION}
 fi
 
 cd MERC-${DESTINATION}/Engage
@@ -83,9 +85,10 @@ echo ${SUBSTITUTE_EXPRESSION}
 sed -i -r ${SUBSTITUTE_EXPRESSION} .project
 
 echo "Resetting UI..."
+cd ..
 if [ -d "./.metadata/.plugins/org.eclipse.core.runtime" ]; then
     echo "UI reset!"
-    rm -rf ./.metadata/.plugins/org.eclipse.core.runtime
+    rm -rf ./.metadata/.plugins/org.eclipse.core.runtime/.settings/com.genuitec.eclipse.theming.ui.prefs
 fi
 
 echo "Done! Don't forget to switch to MERC-${DESTINATION} branch."
